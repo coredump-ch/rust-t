@@ -1,6 +1,6 @@
 [package]
-name = "bla"
+name = "enum"
 version = "0.1.0"
-authors = ["vp"]
+authors = ["Stefan Schindler <dns2utf8@estada.ch>"]
 
 [dependencies]

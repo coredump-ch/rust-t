@@ -57,7 +57,7 @@
   \item Slides are online:
         \url{https://github.com/coredump-ch/rust-t}
   \item Examples are included:
-        \url{}
+        \url{https://github.com/coredump-ch/rust-t/tree/master/examples}
 \end{itemize}
 
 \end{frame}
@@ -125,7 +125,6 @@ fn draw(color: Colors) {
 
 
 \begin{frame}[fragile]{Enum: non-exhaustive patterns}
-error: non-exhaustive patterns: `Green` not covered [E0004]
 \begin{minted}{rust}
 fn draw(color: Colors) {
   match color {
@@ -134,6 +133,25 @@ fn draw(color: Colors) {
     Blue => 0x0000ff,
   };
 }
+\end{minted}
+\end{frame}
+% \pause
+% error: non-exhaustive patterns: `Green` not covered [E0004]
+
+\begin{frame}[fragile]{Enum: non-exhaustive patterns}
+\begin{minted}[breaklines=true]{sh}
+$ cargo run
+src/main.rs:15:3: 19:4 error: non-exhaustive patterns: `Green` not covered [E0004]
+src/main.rs:15   match color {
+src/main.rs:16     Red => 0xff0000,
+src/main.rs:17     // Green => 0x00ff00,
+src/main.rs:18     Blue => 0x0000ff,
+src/main.rs:19   }; // no return
+src/main.rs:15:3: 19:4 help: run `rustc --explain E0004` to see a detailed explanation
+error: aborting due to previous error
+error: Could not compile `enum`.
+
+To learn more, run the command again with --verbose.
 \end{minted}
 \end{frame}
 
