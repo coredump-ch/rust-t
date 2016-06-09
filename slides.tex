@@ -1,0 +1,147 @@
+\documentclass[aspectratio=1610,t]{beamer}
+
+% Colors
+\usepackage{color}
+\definecolor{mainorange}{HTML}{EC811B}
+\definecolor{lightgrey}{HTML}{888888}
+
+% Syntax highlighting
+\usepackage{minted}
+\usepackage{alltt}
+\newcommand\hi[1]{{\color{mainorange} \textbf{#1}}}
+
+% Theme
+\usetheme[%
+	subsectionpage=progressbar,
+	numbering=fraction,
+	progressbar=foot,
+]{metropolis}
+
+% Customization
+\setbeamertemplate{section in toc}[sections numbered]
+\setbeamerfont{title}{size=\fontsize{30}{30}}
+\setbeamerfont{block title}{size=\large}
+\newcommand\sep{\textcolor{lightgrey}{\rule{\linewidth}{0.05mm}}}
+
+% Meta
+\title{Rust<T>}
+\date{\today}
+\author{Stefan Schindler (@dns2utf8)}
+\institute{Coredump Rapperswil}
+
+\begin{document}
+
+{
+\pgfdeclareimage[width=\paperwidth]{bg}{background-dark.pdf}
+\usebackgroundtemplate{\pgfuseimage{bg}}
+\maketitle
+}
+
+% ----------------------------------------------------------------- %
+
+\begin{frame}[noframenumbering]
+	\frametitle{Outline}
+	\tableofcontents
+\end{frame}
+
+% ----------------------------------------------------------------- %
+
+\pgfdeclareimage[width=\paperwidth]{bg}{background-light.pdf}
+\usebackgroundtemplate{\pgfuseimage{bg}}
+
+
+\section{Recap form before dinner}
+
+\begin{frame}[fragile]{Example 2: Generics}
+
+\begin{minted}{rust}
+fn min<T: Ord>(a: T, b: T) -> T {
+    if a <= b { a } else { b }
+}
+\end{minted}
+\pause
+\begin{minted}{rust}
+...
+
+min(10i8,  20)    == 10;    // T is i8
+min(10,    20u32) == 10;    // T is u32
+min("abc", "xyz") == "abc"; // Strings are Ord
+
+min(10i32, "xyz"); // error: mismatched types
+\end{minted}
+
+\end{frame}
+
+
+\section{Simple Generics}
+\begin{frame}[fragile]{Enum}
+\begin{minted}{rust}
+enum Colors {
+  Red,
+  Green,
+  Blue,
+}
+use Colors::*;
+
+fn draw(color: Colors) {
+  match color {
+    ...
+  }
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Enum}
+\begin{minted}{rust}
+use Colors::*;
+
+fn main() {
+  draw(Red);
+  draw(Blue);
+}
+
+fn draw(color: Colors) {
+  match color {
+    Red   => 0xff0000,
+    Green => 0x00ff00,
+    Blue  => 0x0000ff,
+  }; // no return
+}
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Enum: non-exhaustive patterns}
+error: non-exhaustive patterns: `Green` not covered [E0004]
+\begin{minted}{rust}
+fn draw(color: Colors) {
+  match color {
+    Red => 0xff0000,
+    // Green => 0x00ff00,
+    Blue => 0x0000ff,
+  };
+}
+\end{minted}
+\end{frame}
+
+%\input{sections/what_is_rust}
+%\input{sections/getting_started}
+%\input{sections/what_is_type_safety}
+%\input{sections/reading_rust}
+%\input{sections/memory_safety_in_rust}
+%\input{sections/community}
+
+% ----------------------------------------------------------------- %
+
+{
+\pgfdeclareimage[width=\paperwidth]{bg}{background-inverted.pdf}
+\usebackgroundtemplate{\pgfuseimage{bg}}
+\begin{frame}[standout]
+	\begin{centering}
+	{\Huge Thank you!}\\
+	{\normalsize www.coredump.ch}
+	\end{centering}
+\end{frame}
+}
+
+\end{document}
