@@ -46,7 +46,7 @@ fn complex_channel() {
 
   // Map
   let rx = {
-    let (tx, rx) = channel::<MyCommands>();
+    let (tx, rx) = channel::<MyCommands<u64>>();
 
     for i in 0..send_n_commands {
       let tx = tx.clone();
@@ -76,15 +76,15 @@ fn sleep(s : u64) {
 }
 
 #[derive(Debug)]
-enum MyCommands {
-  Add(u64),
-  Sub(u64),
+enum MyCommands<T> {
+  Add(T),
+  Sub(T),
 }
 use MyCommands::*;
 
 
-impl Into<MyCommands> for u64 {
-  fn into(self) -> MyCommands {
+impl Into<MyCommands<u64>> for u64 {
+  fn into(self) -> MyCommands<u64> {
     if self % 2 == 0 {
       Add(self)
     } else {

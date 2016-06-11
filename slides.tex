@@ -407,8 +407,13 @@ println!("\n Find with String: {:?} => {:?}", string, find(&v, &string));
   Usage:
   \begin{minted}[breaklines=true]{rust}
   tx.send(42).unwrap();
+  assert_eq!(42, rx.recv().unwrap());
+  \end{minted}
 
-  assert_eq!(rx.recv().unwrap());
+\pause
+  Works with complex Types:
+  \begin{minted}[breaklines=true]{rust}
+  let (tx, rx) = channel::<MyCommands<u64>>();
   \end{minted}
 \end{frame}
 
