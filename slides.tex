@@ -53,11 +53,12 @@
 
 \begin{frame}[fragile]{Admin}
 
-\begin{itemize}
+\begin{itemize}[<+- | alert@+>]
   \item Slides are online:
         \url{https://github.com/coredump-ch/rust-t}
-  \item Examples are included:
-        \url{https://github.com/coredump-ch/rust-t/tree/master/examples}
+  \item Examples are included in the \texttt{examples} directory.
+  \item Slides of Danilo \& Raphael:
+        \url{https://github.com/coredump-ch/intro-to-rust}
 \end{itemize}
 
 \end{frame}
@@ -155,12 +156,26 @@ To learn more, run the command again with --verbose.
 \end{minted}
 \end{frame}
 
-%\input{sections/what_is_rust}
-%\input{sections/getting_started}
-%\input{sections/what_is_type_safety}
-%\input{sections/reading_rust}
-%\input{sections/memory_safety_in_rust}
-%\input{sections/community}
+
+\section{Transport Data with Enums}
+
+\begin{frame}[fragile]{Enum Transport}
+\begin{minted}[breaklines=true]{rust}
+#[derive(Debug)]
+enum CompoundIndex {
+  SearchIsize(isize),
+  SearchString(String),
+}
+use CompoundIndex::*;
+
+impl Into<SearchIsize> for MyObject {
+  pub fn into(self) -> SearchIsize {
+    SearchIsize(self.num)
+  }
+}
+\end{minted}
+\end{frame}
+
 
 % ----------------------------------------------------------------- %
 
