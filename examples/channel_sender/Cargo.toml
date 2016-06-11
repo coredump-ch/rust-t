@@ -1,6 +1,8 @@
 [package]
-name = "enum_into"
+name = "channel_sender"
 version = "0.1.0"
 authors = ["Stefan Schindler <dns2utf8@estada.ch>"]
 
 [dependencies]
+threadpool = "1.0"
+ansi_term = "0.7"

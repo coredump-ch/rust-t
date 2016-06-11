@@ -5,7 +5,7 @@ struct MyObject {
   st : Option<String>,
 }
 
-#[derive(Debug, Clone)]
+#[derive(Debug)]
 enum CompoundIndex {
   SearchIsize(isize),
   SearchString(String),
@@ -30,20 +30,21 @@ impl Into<MyObject> for String {
 }
 
 fn main() {
-  let m0 : MyObject = 42.into();
-  let m1 : MyObject = "Coredump.ch".to_owned().into();
+  let m0 = MyObject { is : Some(42), st : Some("Self Made".into()) };
+  let m1 : MyObject = 23.into();
+  let m2 : MyObject = "Coredump.ch".to_owned().into();
 
-  println!("Hello, {:?} and {:?}!", m0, m1);
+  println!("Hello, {:?}, {:?} and {:?}!", m0, m1, m2);
 
-  let v = vec![m0, m1];
+  let v = vec![m0, m1, m2];
 
   let number = SearchIsize(42);
   println!("\n Find with number: {:?} => {:?}", number, find(&v, &number));
 
   let string = SearchString("".into());
-  println!("\n Find with number: {:?} => {:?}", string, find(&v, &string));
+  println!("\n Find with String: {:?} => {:?}", string, find(&v, &string));
   let string = SearchString("Coredump.ch".into());
-  println!("\n Find with number: {:?} => {:?}", string, find(&v, &string));
+  println!("\n Find with String: {:?} => {:?}", string, find(&v, &string));
 }
 
 fn find(haystack : &Vec<MyObject>, needle : &CompoundIndex) -> Option<MyObject> {

@@ -29,16 +29,20 @@
 \author{Stefan Schindler (@dns2utf8)}
 \institute{Coredump Rapperswil}
 
+% Backgrounds
+\pgfdeclareimage[width=\paperwidth]{bglight}{background-light.pdf}
+\pgfdeclareimage[width=\paperwidth]{bgdark}{background-dark.pdf}
+\pgfdeclareimage[width=\paperwidth]{bginverted}{background-inverted.pdf}
+
 \begin{document}
 
 {
-\pgfdeclareimage[width=\paperwidth]{bg}{background-dark.pdf}
-\usebackgroundtemplate{\pgfuseimage{bg}}
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
 \maketitle
 }
 
 % ----------------------------------------------------------------- %
-
+\usebackgroundtemplate{\pgfuseimage{bglight}}
 \begin{frame}[noframenumbering]
 	\frametitle{Outline}
 	\tableofcontents
@@ -46,10 +50,12 @@
 
 % ----------------------------------------------------------------- %
 
-\pgfdeclareimage[width=\paperwidth]{bg}{background-light.pdf}
-\usebackgroundtemplate{\pgfuseimage{bg}}
+\usebackgroundtemplate{\pgfuseimage{bglight}}
 
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
 \section{Admin}
+}
 
 \begin{frame}[fragile]{Admin}
 
@@ -63,8 +69,10 @@
 
 \end{frame}
 
-
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
 \section{Recap form before dinner}
+}
 
 \begin{frame}[fragile]{Example 2: Generics}
 
@@ -86,8 +94,10 @@ min(10i32, "xyz"); // error: mismatched types
 
 \end{frame}
 
-
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
 \section{Simple Generics}
+}
 \begin{frame}[fragile]{Enum}
 \begin{minted}{rust}
 enum Colors {
@@ -156,10 +166,113 @@ To learn more, run the command again with --verbose.
 \end{minted}
 \end{frame}
 
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
+\section{Into() complex Type}
+}
 
+\begin{frame}[fragile]{Into() complex Type: Infrastructure}
+\begin{minted}[breaklines=true]{rust}
+#[derive(Debug, Clone)]
+struct MyObject {
+  is : Option<isize>,
+  st : Option<String>,
+}
+
+impl Into<MyObject> for isize {
+  fn into(self) -> MyObject {
+    MyObject {
+      is : Some(self),
+      st : None,
+    }
+  }
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Into() complex Type: Infrastructure}
+and the implementation for \texttt{String}:
+\begin{minted}[breaklines=true]{rust}
+impl Into<MyObject> for String {
+  fn into(self) -> MyObject {
+    MyObject {
+      is : None,
+      st : Some(self),
+    }
+  }
+}
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Into\(\) complex Type: Usage}
+  \begin{minted}[breaklines=true]{rust}
+  let m0 = MyObject { is : Some(42), st : Some("Self Made".into()) };
+  \end{minted}
+
+\pause
+
+  use with \texttt{isize}:
+  \begin{minted}[breaklines=true]{rust}
+  let m1 : MyObject = 23.into();
+  \end{minted}
+
+\pause
+
+  with \texttt{to\_owned()} for \texttt{String}:
+  \begin{minted}[breaklines=true]{rust}
+  let m2 : MyObject = "Coredump.ch".to_owned().into();
+  \end{minted}
+\end{frame}
+
+
+
+
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
+\section{Enum impl}
+}
+
+\begin{frame}[fragile]{Enum impl: Infrastructure}
+\begin{minted}[breaklines=true]{rust}
+impl Person {
+  // A function which takes a `Person` enum as an argument and
+  // returns nothing.
+  fn inspect(self) {
+    // Usage of an `enum` must cover all cases (irrefutable)
+    // so a `match` is used to branch over it.
+    match self {
+      Person::Engineer => { ... },
+      ...
+    }
+  }
+}
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Enum impl: Usage}
+if we have an \texttt{Enum}:
+  \begin{minted}[breaklines=true]{rust}
+  let rohan    = Person::Engineer;
+  \end{minted}
+
+\pause
+we can then use the method on the insance:
+  \begin{minted}[breaklines=true]{rust}
+  rohan.inspect();
+  \end{minted}
+\end{frame}
+
+
+
+
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
 \section{Transport Data with Enums}
+}
 
-\begin{frame}[fragile]{Enum Transport}
+\begin{frame}[fragile]{Enum Transport: Infrastructure}
 \begin{minted}[breaklines=true]{rust}
 #[derive(Debug)]
 enum CompoundIndex {
@@ -167,21 +280,122 @@ enum CompoundIndex {
   SearchString(String),
 }
 use CompoundIndex::*;
+\end{minted}
+\end{frame}
 
-impl Into<SearchIsize> for MyObject {
-  pub fn into(self) -> SearchIsize {
-    SearchIsize(self.num)
+
+\begin{frame}[fragile]{Enum Transport: Usage}
+a number:
+  \begin{minted}[breaklines=true]{rust}
+  let number = SearchIsize(42);
+  \end{minted}
+
+\pause
+a \texttt{String}:
+  \begin{minted}[breaklines=true]{rust}
+  let string = SearchString("".into());
+  \end{minted}
+
+\pause
+a empty \texttt{String}:
+  \begin{minted}[breaklines=true]{rust}
+  let string = SearchString("Coredump.ch".into());
+  \end{minted}
+\end{frame}
+
+
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
+\section{Search a Vector<T>}
+}
+
+\begin{frame}[fragile]{Search a Vector<T>: Infrastructure}
+\begin{minted}[breaklines=true]{rust}
+fn find(haystack : &Vec<MyObject>, needle : &CompoundIndex) -> Option<MyObject> {
+  for ref hay in haystack {
+    match needle {
+      &SearchIsize(ref needle) => {
+        if let Some(ref is) = hay.is {
+          if is == needle {
+            return Some( (*hay).clone() );
+          }
+        }
+      },
+      ...
+    } // end match
   }
+  None
+}
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Search a Vector<T>: Infrastructure}
+\begin{minted}[breaklines=true]{rust}
+fn find(haystack : &Vec<MyObject>, needle : &CompoundIndex) -> Option<MyObject> {
+  for ref hay in haystack {
+    match needle {
+      ...
+      &SearchString(ref needle) => {
+        if let Some(ref st) = hay.st {
+          if st == needle {
+            return Some( (*hay).clone() );
+          }
+        }
+      },
+    } // end match
+  }
+  None
 }
 \end{minted}
 \end{frame}
 
 
+
+\begin{frame}[fragile]{Search a Vector<T>: Usage}
+
+Prepare the \texttt{Vector<MyObject>}:
+\begin{minted}[breaklines=true]{rust}
+let m0 = MyObject { is : Some(42), st : Some("Self Made".into()) };
+let m1 : MyObject = 23.into();
+let m2 : MyObject = "Coredump.ch".to_owned().into();
+
+let v = vec![m0, m1, m2];
+\end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Search a Vector<T>: Usage}
+and search it:
+\begin{minted}[breaklines=true]{rust}
+let number = SearchIsize(42);
+println!("\n Find with number: {:?} => {:?}", number, find(&v, &number));
+
+let string = SearchString("".into());
+println!("\n Find with String: {:?} => {:?}", string, find(&v, &string));
+let string = SearchString("Coredump.ch".into());
+println!("\n Find with String: {:?} => {:?}", string, find(&v, &string));
+\end{minted}
+\end{frame}
+
+\begin{frame}[fragile]{Search a Vector<T>: Output}
+\begin{minted}[breaklines=true]{sh}
+ Find with number: SearchIsize(42) => Some(MyObject { is: Some(42), st: Some("Self Made") })
+
+ Find with String: SearchString("") => None
+
+ Find with String: SearchString("Coredump.ch") => Some(MyObject { is: None, st: Some("Coredump.ch") })
+\end{minted}
+\end{frame}
+
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
+\section{Questions?}
+}
+
 % ----------------------------------------------------------------- %
 
 {
-\pgfdeclareimage[width=\paperwidth]{bg}{background-inverted.pdf}
-\usebackgroundtemplate{\pgfuseimage{bg}}
+\usebackgroundtemplate{\pgfuseimage{bginverted}}
 \begin{frame}[standout]
 	\begin{centering}
 	{\Huge Thank you!}\\
