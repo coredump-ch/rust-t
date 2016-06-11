@@ -1,3 +1,5 @@
+// Start with RUST_BACKTRACE=1 cargo run
+
 extern crate threadpool;
 
 use threadpool::ThreadPool;
@@ -26,7 +28,7 @@ fn simple_channel() {
     for i in 0..8 {
       let tx = tx.clone();
       pool.execute(move|| {
-        if i == 4 {panic!("Must panic");} // -- unexpected failure added here --
+        if i == 4 {panic!("unexpected panic");} // -- unexpected failure added here --
         tx.send(i).unwrap();
       });
     }
@@ -34,7 +36,7 @@ fn simple_channel() {
   };
 
   // And now this code waits for all the senders to be destructed or the first 8 values:
-  assert_eq!(rx.iter().take(8).fold(0, |a, b| a + b), 24);
+  assert_eq!(24, rx.iter().take(8).fold(0, |a, b| a + b));
 }
 
 fn complex_channel() {
@@ -65,6 +67,7 @@ fn complex_channel() {
       Sub(n) => base - n as i64,
     }
   });
+  assert_eq!(6, sum);
   println!("calculated Sum: {} in {} seconds", sum, now.elapsed().as_secs());
 }
 

@@ -387,6 +387,42 @@ println!("\n Find with String: {:?} => {:?}", string, find(&v, &string));
 \end{minted}
 \end{frame}
 
+
+
+
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
+\section{Sending Commands over Channels}
+}
+
+\begin{frame}[fragile]{Sending Commands over Channels}
+  Infrastructure:
+  \begin{minted}[breaklines=true]{rust}
+  use std::sync::mpsc::channel;
+
+  let (tx, rx) = channel();
+  \end{minted}
+
+\pause
+  Usage:
+  \begin{minted}[breaklines=true]{rust}
+  tx.send(42).unwrap();
+
+  assert_eq!(rx.recv().unwrap());
+  \end{minted}
+\end{frame}
+
+
+
+
+
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
+\section{Demotime}
+}
+
+
+
 {
 \usebackgroundtemplate{\pgfuseimage{bgdark}}
 \section{Questions?}
