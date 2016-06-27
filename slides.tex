@@ -293,13 +293,13 @@ a number:
 \pause
 a \texttt{String}:
   \begin{minted}[breaklines=true]{rust}
-  let string = SearchString("".into());
+  let string = SearchString("Coredump.ch".into());
   \end{minted}
 
 \pause
-a empty \texttt{String}:
+an empty \texttt{String}:
   \begin{minted}[breaklines=true]{rust}
-  let string = SearchString("Coredump.ch".into());
+  let string = SearchString("".into());
   \end{minted}
 \end{frame}
 
@@ -419,7 +419,42 @@ println!("\n Find with String: {:?} => {:?}", string, find(&v, &string));
 
 
 
+\begin{frame}[fragile]{Massive errors}
+  Natural occurences:
+  \begin{minted}[breaklines=true]{rust}
+    let n = 10;
+    let y = (["a", "b"])[n]; // panics
 
+    my_io_function().unwrap() // maybe panics
+  \end{minted}
+
+\pause
+  Simulated:
+  \begin{minted}[breaklines=true]{rust}
+    panic!("with a message")
+  \end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{bl}
+  \begin{minted}[breaklines=true]{rust}
+let pool = ThreadPool::new(4);
+
+let rx = {
+  let (tx, rx) = channel();
+  for i in 0..8 {
+    let tx = tx.clone();
+    pool.execute(move|| {
+      if i == 4 {panic!("unexpected panic");} // -- unexpected failure added here --
+      tx.send(i).unwrap();
+    });
+  }
+  rx
+};
+
+assert_eq!(24, rx.iter().take(8).fold(0, |a, b| a + b));
+  \end{minted}
+\end{frame}
 
 {
 \usebackgroundtemplate{\pgfuseimage{bgdark}}
