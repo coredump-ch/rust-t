@@ -19,4 +19,5 @@ First, install Fira Sans and Fira Mono fonts on your system:
 Then build the slides:
 
     git clone --recursive https://github.com/coredump-ch/rust-t
+    cd rust-t
     make
