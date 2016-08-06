@@ -25,7 +25,7 @@
 
 % Meta
 \title{Rust<T>}
-\date{\today}
+\date{7. 9. 2016}
 \author{Stefan Schindler (@dns2utf8)}
 \institute{Coredump Rapperswil}
 
@@ -71,7 +71,7 @@
 
 {
 \usebackgroundtemplate{\pgfuseimage{bgdark}}
-\section{Recap form before dinner}
+\section{Recap form last time}
 }
 
 \begin{frame}[fragile]{Example 2: Generics}
@@ -87,7 +87,8 @@ fn min<T: Ord>(a: T, b: T) -> T {
 
 min(10i8,  20)    == 10;    // T is i8
 min(10,    20u32) == 10;    // T is u32
-min("abc", "xyz") == "abc"; // Strings are Ord
+min("abc", "xyz") == "abc"; // &str or Strings are Ord
+min("abc".to_string(), "ABC".into()) == "ABC";
 
 min(10i32, "xyz"); // error: mismatched types
 \end{minted}
