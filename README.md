@@ -1,4 +1,4 @@
-# Intro To Rust
+# Rust&lt;T>
 
 Presentation using LaTeX Beamer.
 
@@ -21,3 +21,13 @@ Then build the slides:
     git clone --recursive https://github.com/coredump-ch/rust-t
     cd rust-t
     make
+
+## [License](LICENSE)
+
+Rust&lt;T> © by Stefan Schindler and friends (Danilo Bargen and Raphael Nestler)
+
+Rust&lt;T> is licensed under a
+Creative Commons Attribution 4.0 International License.
+
+You should have received a copy of the license along with this
+work. If not, see http://creativecommons.org/licenses/by/4.0/.
