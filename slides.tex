@@ -71,7 +71,7 @@
 
 {
 \usebackgroundtemplate{\pgfuseimage{bgdark}}
-\section{Recap form last time}
+\section{Recap from last time}
 }
 
 \begin{frame}[fragile]{Example 2: Generics}
@@ -237,8 +237,8 @@ impl Into<MyObject> for String {
 \begin{frame}[fragile]{Enum impl: Infrastructure}
 \begin{minted}[breaklines=true]{rust}
 impl Person {
-  // A function which takes a `Person` enum as an argument and
-  // returns nothing.
+  // A function which takes a `Person` enum as an argument
+  // and returns nothing.
   fn inspect(self) {
     // Usage of an `enum` must cover all cases (irrefutable)
     // so a `match` is used to branch over it.
@@ -258,7 +258,7 @@ if we have an \texttt{Enum}:
   let rohan    = Person::Engineer;
   \end{minted}
 
-\pause
+%\pause
 we can then use the method on the insance:
   \begin{minted}[breaklines=true]{rust}
   rohan.inspect();
@@ -437,17 +437,31 @@ println!("\n Find with String: {:?} => {:?}", string, find(&v, &string));
 \end{frame}
 
 
-\begin{frame}[fragile]{bl}
+\begin{frame}[fragile]{Handling panic: 1/3}
   \begin{minted}[breaklines=true]{rust}
 let pool = ThreadPool::new(4);
 
+  let (tx, rx) = channel();
+  for i in 0..8 {
+    let tx = tx.clone();
+    pool.execute(move|| {
+      // -- panicking work here --
+    });
+  }
+
+  assert_eq!(24, rx.iter().take(8).fold(0, |a, b| a + b));
+  \end{minted}
+\end{frame}
+
+
+\begin{frame}[fragile]{Handling panic: 1/3}
+  \begin{minted}[breaklines=true]{rust}
 let rx = {
   let (tx, rx) = channel();
   for i in 0..8 {
     let tx = tx.clone();
     pool.execute(move|| {
-      if i == 4 {panic!("unexpected panic");} // -- unexpected failure added here --
-      tx.send(i).unwrap();
+      // -- panicking work here --
     });
   }
   rx
@@ -456,6 +470,41 @@ let rx = {
 assert_eq!(24, rx.iter().take(8).fold(0, |a, b| a + b));
   \end{minted}
 \end{frame}
+\begin{frame}[fragile]{Handling panic: 3/3}
+  \begin{minted}[breaklines=true]{rust}
+let rx = {
+  let (tx, rx) = channel();
+  for i in 0..8 {  let tx = tx.clone();
+    pool.execute(move|| {
+      if i == 4 { // -- unexpected failure added here --
+        panic!("unexpected panic");
+      }
+      tx.send(i).unwrap();
+    });
+  }
+  rx
+};
+// And now this code waits for all the senders to be destructed or the first 8 values:
+assert_eq!(24, rx.iter().take(8).fold(0, |a, b| a + b));
+  \end{minted}
+\end{frame}
+
+{
+\usebackgroundtemplate{\pgfuseimage{bgdark}}
+\section{Day-Time-Tools}
+}
+\begin{frame}[fragile]{Day-Time-Tools}
+
+Ease your day
+
+\begin{itemize}[<+- | alert@+>]
+  \item git
+  \item cargo \raisebox{-.25\height}{\includegraphics[height=0.5cm]{cargo.png}}
+  \item cargo outdated \\ \includegraphics[height=4cm]{cargo_outdated.png}
+\end{itemize}
+
+\end{frame}
+
 
 {
 \usebackgroundtemplate{\pgfuseimage{bgdark}}
