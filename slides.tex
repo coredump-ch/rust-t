@@ -25,9 +25,9 @@
 
 % Meta
 \title{Rust<T>}
-\date{7. 9. 2016}
+\date{5. 9. 2016}
 \author{Stefan Schindler (@dns2utf8)}
-\institute{Coredump Rapperswil}
+\institute{Coredump Rapperswil @ Mozilla.ch Meetup}
 
 % Backgrounds
 \pgfdeclareimage[width=\paperwidth]{bglight}{background-light.pdf}
@@ -62,6 +62,7 @@
 \begin{itemize}
   \item Slides are online:
         \url{https://github.com/coredump-ch/rust-t}
+        \\ Please report issues in the presentation
   \item Examples are included in the \texttt{examples} directory.
   \item Slides of Danilo \& Raphael:
         \url{https://github.com/coredump-ch/intro-to-rust}
@@ -259,7 +260,7 @@ if we have an \texttt{Enum}:
   \end{minted}
 
 %\pause
-we can then use the method on the insance:
+we can then use the method on the instance:
   \begin{minted}[breaklines=true]{rust}
   rohan.inspect();
   \end{minted}
@@ -454,7 +455,7 @@ let pool = ThreadPool::new(4);
 \end{frame}
 
 
-\begin{frame}[fragile]{Handling panic: 1/3}
+\begin{frame}[fragile]{Handling panic: 2/3}
   \begin{minted}[breaklines=true]{rust}
 let rx = {
   let (tx, rx) = channel();
